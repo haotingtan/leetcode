@@ -2,7 +2,7 @@ class Solution:
     def maxDepth(self, s: str) -> int:
         max_lvl = 0
         lvl = 0
-        for i, v in enumerate(s):
+        for v in s:
             if v == '(':
                 lvl += 1
             elif v == ')':
