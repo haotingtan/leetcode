@@ -1,42 +1,40 @@
+
 class Solution:
     def searchRange(self, nums: List[int], target: int) -> List[int]:
 
-        lower_bound = self.findBound(nums, target, True)
-        if lower_bound == -1:
-            return [-1, -1]
+        def findLeft(low, upper):
+            if low > upper:
+                return -1
 
-        upper_bound = self.findBound(nums, target, False)
-
-        return [lower_bound, upper_bound]
-
-    def findBound(self, nums: List[int], target: int, isFirst: bool) -> int:
-
-        N = len(nums)
-        begin, end = 0, N - 1
-        while begin <= end:
-            mid = int((begin + end) / 2)
+            mid = low + (upper - low) // 2
 
             if nums[mid] == target:
-
-                if isFirst:
-                    # This means we found our lower bound.
-                    if mid == begin or nums[mid - 1] < target:
-                        return mid
-
-                    # Search on the left side for the bound.
-                    end = mid - 1
-                else:
-
-                    # This means we found our upper bound.
-                    if mid == end or nums[mid + 1] > target:
-                        return mid
-
-                    # Search on the right side for the bound.
-                    begin = mid + 1
-
+                left = findLeft(low, mid - 1)
+                return mid if left == -1 else left
             elif nums[mid] > target:
-                end = mid - 1
+                return findLeft(low, mid - 1)
             else:
-                begin = mid + 1
+                return findLeft(mid + 1, upper)
 
-        return -1
+        def findRight(low, upper):
+            if low > upper:
+                return -1
+
+            mid = low + (upper - low) // 2
+
+            if nums[mid] == target:
+                right = findRight(mid + 1, upper)
+                return mid if right == -1 else right
+            elif nums[mid] > target:
+                return findRight(low, mid - 1)
+            else:
+                return findRight(mid + 1, upper)
+
+        left = findLeft(0, len(nums) - 1)
+        right = findRight(0, len(nums) - 1)
+
+        return [left, right]
+
+            
+
+        
